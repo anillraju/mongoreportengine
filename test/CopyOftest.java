@@ -1,19 +1,16 @@
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.mongodb.AggregationOutput;
+import java.net.UnknownHostException;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.ReadPreference;
-
+import com.saba.report.FilterCondition;
 //~--- JDK imports ------------------------------------------------------------
-
-import java.net.UnknownHostException;
-
-import java.util.Set;
+import com.saba.report.Operator;
 
 public class CopyOftest {
     static DBCollection collection;
@@ -41,14 +38,32 @@ public class CopyOftest {
         DBObject query  = getMetricReportQuery(columns);
 
         
-        DBCursor result = runReport(null,query);
+        FilterCondition filterConditions[] = getFilterConditions();
+		DBObject filter =getMetricReportFilter(filterConditions);
+		DBCursor result = runReport(filter ,query);
         
         for (DBObject dbObject : result) {
             System.out.println(dbObject);
         }
     }
 
-    private static DBCursor runReport(DBObject filter,DBObject columns) {
+    private static FilterCondition[] getFilterConditions() {
+		FilterCondition f[] = new  FilterCondition[1];
+		FilterCondition f1 = new FilterCondition();
+		f1.setFieldName("city");
+		f1.setOperator(Operator.NOTEQUAL);
+		f1.setValue("AS");
+		f[0] = f1;
+		return f;
+	}
+
+	private static DBObject getMetricReportFilter() {
+		DBObject filter = new BasicDBObject();
+		
+		return null;
+	}
+
+	private static DBCursor runReport(DBObject filter,DBObject columns) {
     	if(filter==null)
     		filter = new BasicDBObject();
     	if(columns==null)
