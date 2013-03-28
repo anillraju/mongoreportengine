@@ -35,6 +35,7 @@ public class ReportEngineImpl implements ReportEngine {
     @Override
     public Report runReport(String reportId) {
         ReportMetaData reportMetaData = ReportMetadataManager.getReportMetadata(reportId);
+        
         DBObject       filter         = getMetricReportFilter(reportMetaData.getFilters());
         DBObject       columns        = getMetricReportQuery(reportMetaData.getColumns());
 
