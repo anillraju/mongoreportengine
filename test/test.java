@@ -53,18 +53,17 @@ public class test {
 
     private static AggregationOutput getQuery(DBCollection collection) {    // create our pipeline operations, first with the $match
 
-//        DBObject match = new BasicDBObject("$match", new BasicDBObject("pop", "12937926") );
+//      DBObject match = new BasicDBObject("$match", new BasicDBObject("pop", "12937926") );
         // build the $projection operation
-  //      DBObject fields = new BasicDBObject("state", 1);
-
-    //    fields.put("pop", 1);
-
-      //  DBObject project = new BasicDBObject("$project", fields);
-
+        // DBObject fields = new BasicDBObject("state", 1);
+        // fields.put("pop", 1);
+        // DBObject project = new BasicDBObject("$project", fields);
         // Now the $group operation
         DBObject groupFields = new BasicDBObject("_id", "$state");
-        groupFields.put("total_pop", new BasicDBObject("$sum","$pop"));
-        DBObject group       = new BasicDBObject("$group", groupFields);
+
+        groupFields.put("total_pop", new BasicDBObject("$sum", "$pop"));
+
+        DBObject group = new BasicDBObject("$group", groupFields);
 
         // run aggregation
         AggregationOutput output = collection.aggregate(group);

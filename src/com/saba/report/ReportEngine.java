@@ -1,8 +1,5 @@
 package com.saba.report;
 
-
 public interface ReportEngine {
-
-	Report runReport(String reportId);
-
+    Report runReport(String reportId);
 }

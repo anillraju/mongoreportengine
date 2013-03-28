@@ -1,16 +1,19 @@
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.net.UnknownHostException;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+
 import com.saba.report.FilterCondition;
-//~--- JDK imports ------------------------------------------------------------
 import com.saba.report.Operator;
+import com.saba.report.ReportFilter;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.net.UnknownHostException;
 
 public class CopyOftest {
     static DBCollection collection;
@@ -34,46 +37,74 @@ public class CopyOftest {
      * @throws UnknownHostException
      */
     public static void main(String[] args) throws UnknownHostException {
-        String[] columns = "state,city,pop,_id".split(",");
-        DBObject query  = getMetricReportQuery(columns);
+        String[]     columns            = "state,_id".split(",");
+        DBObject     query              = getMetricReportQuery(columns);
+        ReportFilter filterConditions[] = getFilterConditions();
+        DBObject     filter             = getMetricReportFilter(filterConditions);
+        DBCursor     result             = runReport(filter, query);
 
-        
-        FilterCondition filterConditions[] = getFilterConditions();
-		DBObject filter =getMetricReportFilter(filterConditions);
-		DBCursor result = runReport(filter ,query);
-        
         for (DBObject dbObject : result) {
             System.out.println(dbObject);
         }
     }
 
-    private static FilterCondition[] getFilterConditions() {
-		FilterCondition f[] = new  FilterCondition[1];
-		FilterCondition f1 = new FilterCondition();
-		f1.setFieldName("city");
-		f1.setOperator(Operator.NOTEQUAL);
-		f1.setValue("AS");
-		f[0] = f1;
-		return f;
-	}
+    private static ReportFilter[] getFilterConditions() {
+        ReportFilter f[] = new ReportFilter[2];
+        ReportFilter f1  = new FilterCondition();
 
-	private static DBObject getMetricReportFilter() {
-		DBObject filter = new BasicDBObject();
-		
-		return null;
-	}
+        f1.setFieldName("state");
+        f1.setOperator(Operator.EQUAL);
+        f1.setValue("WY");
 
-	private static DBCursor runReport(DBObject filter,DBObject columns) {
-    	if(filter==null)
-    		filter = new BasicDBObject();
-    	if(columns==null)
-    		columns = new BasicDBObject();
-    	
-		return collection.find(filter,columns);
-		
-	}
+        ReportFilter f2 = new FilterCondition();
 
-	private static DBObject getMetricReportQuery(String[] columns) {
+        f2.setFieldName("city");
+        f2.setOperator(Operator.NOTEQUAL);
+        f2.setValue("SMOOT");
+        f[1] = f1;
+        f[0] = f2;
+
+        return f;
+    }
+
+    private static DBObject getMetricReportFilter(ReportFilter[] filterConditions) {
+        if (filterConditions.length == 0) {
+            return getMetricReportFilter();
+        }
+
+        BasicDBObject filter = new BasicDBObject();
+
+        for (int i = filterConditions.length - 1; i >= 0; i--) {
+            ReportFilter filterCondition = filterConditions[i];
+
+            if (filterCondition.getOperator().equals(Operator.EQUAL)) {
+                filter.put(filterCondition.getFieldName(), filterCondition.getValue());
+            } else {
+                filter.put(filterCondition.getFieldName(),
+                           new BasicDBObject(filterCondition.getOperator().getSymbol(), filterCondition.getValue()));
+            }
+        }
+
+        return filter;
+    }
+
+    private static DBObject getMetricReportFilter() {
+        return new BasicDBObject();
+    }
+
+    private static DBCursor runReport(DBObject filter, DBObject columns) {
+        if (filter == null) {
+            filter = new BasicDBObject();
+        }
+
+        if (columns == null) {
+            columns = new BasicDBObject();
+        }
+
+        return collection.find(filter, columns);
+    }
+
+    private static DBObject getMetricReportQuery(String[] columns) {
         if (columns.length == 0) {
             return getMetricReport();
         }
@@ -84,7 +115,7 @@ public class CopyOftest {
             dbobj.put(string, 1);
         }
 
-        return  dbobj;
+        return dbobj;
     }
 
     private static DBObject getMetricReport() {

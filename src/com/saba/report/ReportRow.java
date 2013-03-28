@@ -1,10 +1,75 @@
 package com.saba.report;
 
-public class ReportRow {
+//~--- non-JDK imports --------------------------------------------------------
 
-	public char[] getData(ReportColumn reportColumn) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+import com.mongodb.DBObject;
 
+import org.bson.BSONObject;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Map;
+import java.util.Set;
+
+public class ReportRow implements DBObject {
+    private DBObject dbObject;
+
+    public void setDbObject(DBObject dbObject) {
+        this.dbObject = dbObject;
+    }
+
+    @Override
+    public boolean containsField(String arg0) {
+        return dbObject.containsField(arg0);
+    }
+
+    @Override @Deprecated
+    public boolean containsKey(String arg0) {
+        return dbObject.containsKey(arg0);
+    }
+
+    @Override
+    public Object get(String arg0) {
+        return dbObject.get(arg0);
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return dbObject.keySet();
+    }
+
+    @Override
+    public Object put(String arg0, Object arg1) {
+        return dbObject.put(arg0, arg1);
+    }
+
+    @Override
+    public void putAll(BSONObject arg0) {
+        dbObject.putAll(arg0);
+    }
+
+    @Override
+    public void putAll(Map arg0) {
+        dbObject.putAll(arg0);
+    }
+
+    @Override
+    public Object removeField(String arg0) {
+        return dbObject.removeField(arg0);
+    }
+
+    @Override
+    public Map toMap() {
+        return dbObject.toMap();
+    }
+
+    @Override
+    public boolean isPartialObject() {
+        return dbObject.isPartialObject();
+    }
+
+    @Override
+    public void markAsPartialObject() {
+        dbObject.markAsPartialObject();
+    }
 }

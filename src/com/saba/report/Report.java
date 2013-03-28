@@ -1,11 +1,13 @@
 package com.saba.report;
 
+//~--- JDK imports ------------------------------------------------------------
+
 import java.util.List;
 
 public interface Report {
+    List<ReportColumn> getAllColumns();
 
-	List<ReportColumn> getAllColumns();
+    ReportRow getNextRow();
 
-	List<ReportRow> getAllRows();
-
+    void setReportMetaData(ReportMetaData reportMetaData);
 }
