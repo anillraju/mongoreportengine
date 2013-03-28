@@ -55,25 +55,6 @@ public class ReportEngineImpl implements ReportEngine {
         return report;
     }
 
-    private static ReportFilter[] getFilterConditions() {
-        ReportFilter f[] = new ReportFilter[2];
-        ReportFilter f1  = new FilterCondition();
-
-        f1.setFieldName("state");
-        f1.setOperator(Operator.EQUAL);
-        f1.setValue("WY");
-
-        ReportFilter f2 = new FilterCondition();
-
-        f2.setFieldName("city");
-        f2.setOperator(Operator.NOTEQUAL);
-        f2.setValue("SMOOT");
-        f[1] = f1;
-        f[0] = f2;
-
-        return f;
-    }
-
     private static DBObject getMetricReportFilter(List<ReportFilter> list) {
         if (list.size() == 0) {
             return getMetricReportFilter();
@@ -97,18 +78,6 @@ public class ReportEngineImpl implements ReportEngine {
 
     private static DBObject getMetricReportFilter() {
         return new BasicDBObject();
-    }
-
-    private static DBCursor runReport(DBObject filter, DBObject columns) {
-        if (filter == null) {
-            filter = new BasicDBObject();
-        }
-
-        if (columns == null) {
-            columns = new BasicDBObject();
-        }
-
-        return collection.find(filter, columns);
     }
 
     private static DBObject getMetricReportQuery(List<ReportColumn> list) {
